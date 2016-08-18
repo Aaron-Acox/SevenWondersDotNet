@@ -16,14 +16,23 @@ namespace SevenWonders.Data
            
         }
 
-        public DbSet<Game> Games { get; set; } 
+        public DbSet<Game> Games { get; set; }
+        public DbSet<Player> Players { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
+
+            builder.Entity<PlayerGame>()
+                .HasKey(pg => new {pg.PlayerId, pg.GameId});
+            builder.Entity<PlayerGame>()
+                .HasOne(pg => pg.Player)
+                .WithMany(p => p.PlayerGames)
+                .HasForeignKey(pg => pg.PlayerId);
+            builder.Entity<PlayerGame>()
+                .HasOne(pg => pg.Game)
+                .WithMany(g => g.PlayerGames)
+                .HasForeignKey(pg => pg.GameId);
         }
     }
 }

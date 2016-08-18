@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace SevenWonders.Models
 {
-    public class Game
+    public class Player
     {
-        public long GameId { get; set; }
-        public bool IsFinished { get; set; }
-
+        public long PlayerId { get; set; }
+        public ApplicationUser User { get; set; }
+        
         public List<PlayerGame> PlayerGames { get; set; } 
     }
 }

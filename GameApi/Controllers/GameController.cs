@@ -11,8 +11,10 @@ namespace GameApi.Controllers
 {
     public class GameController : ControllerBase
     {
-        private AmazonDynamoDBConfig config = new AmazonDynamoDBConfig {ServiceURL = "http://localhost:8000"};
-        
+        private AmazonDynamoDBConfig Config => new AmazonDynamoDBConfig {ServiceURL = "http://localhost:8000"};
+
+        private IAmazonDynamoDB Client => new AmazonDynamoDBClient(Config);
+
         // GET
         public IActionResult Index()
         {
@@ -22,12 +24,11 @@ namespace GameApi.Controllers
         [HttpGet("api/game")]
         public async Task<IActionResult> Get()
         {
-            var client = new AmazonDynamoDBClient(config);
             var request = new ScanRequest
             {
                 TableName = "game"
             };
-            var response = await client.ScanAsync(request);
+            var response = await Client.ScanAsync(request);
             var games = response.Items.Select(i => new Game{Id = Guid.Parse(i["id"].S)});
             return Ok(games);
         }
@@ -35,7 +36,6 @@ namespace GameApi.Controllers
         [HttpPost("api/game")]
         public async Task<IActionResult> Post()
         {
-            var client = new AmazonDynamoDBClient(config);
             var id = Guid.NewGuid();
             var request = new PutItemRequest
             {
@@ -45,7 +45,7 @@ namespace GameApi.Controllers
                     {"id", new AttributeValue{S = id.ToString()}}
                 }
             };
-            var response = await client.PutItemAsync(request);
+            var response = await Client.PutItemAsync(request);
             return Created($"api/{id}", new Game {Id = id});
         }
     }

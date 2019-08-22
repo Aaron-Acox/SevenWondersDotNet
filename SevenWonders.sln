@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbSetup", "DbSetup\DbSetup.csproj", "{C239816D-612F-4685-991A-69D14DACA661}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameApi", "GameApi\GameApi.csproj", "{91E88A6F-D98C-40A0-9BE2-F54DB3599C58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{C239816D-612F-4685-991A-69D14DACA661}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C239816D-612F-4685-991A-69D14DACA661}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C239816D-612F-4685-991A-69D14DACA661}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91E88A6F-D98C-40A0-9BE2-F54DB3599C58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91E88A6F-D98C-40A0-9BE2-F54DB3599C58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91E88A6F-D98C-40A0-9BE2-F54DB3599C58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91E88A6F-D98C-40A0-9BE2-F54DB3599C58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

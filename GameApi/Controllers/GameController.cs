@@ -29,7 +29,11 @@ namespace GameApi.Controllers
                 TableName = "game"
             };
             var response = await Client.ScanAsync(request);
-            var games = response.Items.Select(i => new Game{Id = Guid.Parse(i["id"].S)});
+            var games = response.Items.Select(i => new Game
+            {
+                Id = Guid.Parse(i["id"].S),
+                Status = Enum.Parse<GameStatus>(i["status"].S)
+            });
             return Ok(games);
         }
 
@@ -37,16 +41,18 @@ namespace GameApi.Controllers
         public async Task<IActionResult> Post()
         {
             var id = Guid.NewGuid();
+            var status = GameStatus.WaitingForPlayers;
             var request = new PutItemRequest
             {
                 TableName = "game",
                 Item = new Dictionary<string, AttributeValue>
                 {
-                    {"id", new AttributeValue{S = id.ToString()}}
+                    {"id", new AttributeValue{S = id.ToString()}},
+                    {"status", new AttributeValue{S = status.ToString()}}
                 }
             };
             var response = await Client.PutItemAsync(request);
-            return Created($"api/{id}", new Game {Id = id});
+            return Created($"api/{id}", new Game {Id = id, Status = status});
         }
     }
 }

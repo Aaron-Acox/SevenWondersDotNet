@@ -29,9 +29,26 @@ namespace DbSetup
                 },
                 AttributeDefinitions = new List<AttributeDefinition>
                 {
-                    new AttributeDefinition("id", ScalarAttributeType.S)
+                    new AttributeDefinition("id", ScalarAttributeType.S),
+                    new AttributeDefinition("status", ScalarAttributeType.S)
                 },
-                ProvisionedThroughput = new ProvisionedThroughput(5, 5)
+                ProvisionedThroughput = new ProvisionedThroughput(5, 5),
+                GlobalSecondaryIndexes = new List<GlobalSecondaryIndex>
+                {
+                    new GlobalSecondaryIndex
+                    {
+                        IndexName = "statusIndex",
+                        KeySchema = new List<KeySchemaElement>
+                        {
+                            new KeySchemaElement("status", KeyType.HASH)
+                        },
+                        ProvisionedThroughput = new ProvisionedThroughput(5, 5),
+                        Projection = new Projection
+                        {
+                            ProjectionType = ProjectionType.KEYS_ONLY
+                        }
+                    }
+                }
             };
             var result = await  client.CreateTableAsync(request);
             Console.WriteLine(result);

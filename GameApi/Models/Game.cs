@@ -6,5 +6,7 @@ namespace GameApi.Models
     {
         public Guid Id { get; set; }
         public GameStatus Status { get; set; }
+        
+        public byte PlayerCount { get; set; }
     }
 }

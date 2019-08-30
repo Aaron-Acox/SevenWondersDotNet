@@ -41,13 +41,15 @@ namespace GameApi.Controllers
                     ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                     {
                         {":v_status", new AttributeValue {S= status.ToString()}} 
-                    }
+                    },
+                    ProjectionExpression = "id, #gameStatus, playerCount"
                 };
                 var response = await Client.QueryAsync(request);
                 games = response.Items.Select(i => new Game
                 {
                     Id = Guid.Parse(i["id"].S),
-                    Status = Enum.Parse<GameStatus>(i["status"].S)
+                    Status = Enum.Parse<GameStatus>(i["status"].S),
+                    PlayerCount = Byte.Parse(i["playerCount"].N)
                 });
             }
             else
@@ -60,7 +62,8 @@ namespace GameApi.Controllers
                 games = response.Items.Select(i => new Game
                 {
                     Id = Guid.Parse(i["id"].S),
-                    Status = Enum.Parse<GameStatus>(i["status"].S)
+                    Status = Enum.Parse<GameStatus>(i["status"].S),
+                    PlayerCount = Byte.Parse(i["playerCount"].N)
                 });
             }
            
@@ -68,8 +71,12 @@ namespace GameApi.Controllers
         }
 
         [HttpPost("api/game")]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post([FromBody]Game game)
         {
+            if (game.PlayerCount < 3 || game.PlayerCount > 7)
+            {
+                return BadRequest();
+            }
             var id = Guid.NewGuid();
             var status = GameStatus.WaitingForPlayers;
             var request = new PutItemRequest
@@ -78,7 +85,8 @@ namespace GameApi.Controllers
                 Item = new Dictionary<string, AttributeValue>
                 {
                     {"id", new AttributeValue{S = id.ToString()}},
-                    {"status", new AttributeValue{S = status.ToString()}}
+                    {"status", new AttributeValue{S = status.ToString()}},
+                    {"playerCount", new AttributeValue {N = game.PlayerCount.ToString() }}
                 }
             };
             var response = await Client.PutItemAsync(request);
